@@ -1,27 +1,25 @@
-import { FollowService } from './modules/follow/follow.service';
-import { CloudinaryService } from './modules/cloudinary/cloudinary.service';
+import { CommentModule } from '@modules/comment/comment.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { MongooseModule } from '@nestjs/mongoose';
-import { JwtModule } from '@nestjs/jwt';
-import { RolesGuard } from './guards/role.guard';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
+import { AuthService } from './modules/auth/auth.service';
 import { FacebookStrategy } from './modules/auth/facebook.strategy';
 import { GoogleStrategy } from './modules/auth/google.strategy';
-import { AuthService } from './modules/auth/auth.service';
-import { UserModule } from './modules/user/users.module';
 import { CategoryModule } from './modules/category/category.module';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
-import { FollowModule } from './modules/follow/follow.module';
-import { UserService } from './modules/user/users.service';
 import { CategoryService } from './modules/category/category.service';
-
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { CloudinaryService } from './modules/cloudinary/cloudinary.service';
+import { FollowModule } from './modules/follow/follow.module';
+import { FollowService } from './modules/follow/follow.service';
+import { PostsModule } from './modules/posts/posts.module';
+import { UserModule } from './modules/user/users.module';
+import { UserService } from './modules/user/users.service';
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGODB_URL),
@@ -42,6 +40,8 @@ import { CategoryService } from './modules/category/category.service';
     CategoryModule,
     CloudinaryModule,
     FollowModule,
+    PostsModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [

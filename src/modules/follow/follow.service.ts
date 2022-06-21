@@ -1,19 +1,18 @@
-import { ResponseDto } from './../user/dto/user.dto';
-import { Model } from 'mongoose';
-import { FOLLOW_STATUS } from './../../constaints/follow';
 import {
-  HttpException,
-  Injectable,
-  HttpStatus,
   forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
 } from '@nestjs/common';
-import { UserService } from '../user/users.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Follow, FollowDocument } from './entities/follow.schema';
+import mongoose, { Model } from 'mongoose';
+import { FOLLOW_STATUS } from 'src/constants/follow';
 import { handleError } from 'src/utils/errors';
-import mongoose from 'mongoose';
-import { Inject } from '@nestjs/common';
-import { FollowDataDto, FollowObjDto } from './dto/follow.dto';
+import { UserService } from '../user/users.service';
+import { ResponseDto } from './../user/dto/user.dto';
+import { FollowDataDto } from './dto/follow.dto';
+import { Follow, FollowDocument } from './entities/follow.schema';
 import { aggregateUser } from './utils';
 
 @Injectable()

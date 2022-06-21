@@ -1,7 +1,6 @@
-import { FOLLOW_STATUS } from './../../../constaints/follow';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Schema as MongooseSchema, Types } from 'mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
+import { FOLLOW_STATUS } from 'src/constants/follow';
 import { User } from 'src/modules/user/models/users.schema';
 import { TTimestamp } from 'src/types/common';
 

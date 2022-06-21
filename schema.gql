@@ -63,16 +63,21 @@ type StatusResponseDto {
   message: String!
 }
 
-type DeleteCategoryResponseDto {
-  status: Int!
-  message: String!
-}
-
 type CategoryDto {
   _id: String
   title: String
   thumbnail: String
   followers: [ResponseUserDto!]
+}
+
+type DeleteCategoryResponseDto {
+  status: Int!
+  message: String!
+}
+
+type Post {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 type Query {
@@ -82,6 +87,8 @@ type Query {
   follow: [Follow!]!
   getAllCategory: [CategoryDto!]!
   getDetailCategory(id: Int!): CategoryDto!
+  posts: [Post!]!
+  post(id: Int!): Post!
 }
 
 type Mutation {
@@ -96,6 +103,9 @@ type Mutation {
   updateCategory(updateCategoryInput: UpdateCategoryInput!): StatusResponseDto!
   deleteCategory(id: String!): DeleteCategoryResponseDto!
   login(input: InputLoginDto!): ResponseLoginDto!
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post!
 }
 
 input InputCreateUserDto {
@@ -129,4 +139,15 @@ input UpdateCategoryInput {
 input InputLoginDto {
   email: String!
   password: String!
+}
+
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

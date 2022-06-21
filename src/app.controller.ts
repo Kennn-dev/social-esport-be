@@ -1,6 +1,3 @@
-import { UPLOAD_TYPE } from './constaints/file';
-import { AppService } from './app.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
   Controller,
   Get,
@@ -13,8 +10,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './modules/auth/auth.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AppService } from './app.service';
+import { AuthService } from './modules/auth/auth.service';
 import { UploadResponse } from './types/cloudinary';
 
 @Controller()

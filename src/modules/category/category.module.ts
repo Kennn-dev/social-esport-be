@@ -1,9 +1,9 @@
-import { Category, CategorySchema } from './models/category.schema';
 import { forwardRef, Module } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { CategoryResolver } from './category.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from '../user/users.module';
+import { CategoryResolver } from './category.resolver';
+import { CategoryService } from './category.service';
+import { Category, CategorySchema } from './models/category.schema';
 
 @Module({
   imports: [

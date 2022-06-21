@@ -1,18 +1,15 @@
-import { JwtAuthGuard } from './../../guards/jwt-auth.guard';
-import { ResponseDto } from './../user/dto/user.dto';
-import { Role } from './../../constaints/role';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CategoryService } from './category.service';
-import { CreateCategoryInput } from './dto/create-category.input';
-import { UpdateCategoryInput } from './dto/update-category.input';
-import { Request, UseGuards } from '@nestjs/common';
-import { Roles } from '../auth/role/role.decorator';
-import { RolesGuard } from 'src/guards/role.guard';
-import { DeleteCategoryResponseDto } from './dto/delete-category.input';
+import { UseGuards } from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { CurrentUser } from 'src/decorators/auth.decorators';
 import { TCurrentUser } from 'src/types/user';
+import { JwtAuthGuard } from './../../guards/jwt-auth.guard';
+import { ResponseDto } from './../user/dto/user.dto';
+import { CategoryService } from './category.service';
 import { CategoryDto } from './dto/category.dto';
+import { CreateCategoryInput } from './dto/create-category.input';
+import { DeleteCategoryResponseDto } from './dto/delete-category.input';
+import { UpdateCategoryInput } from './dto/update-category.input';
 
 // @UseGuards(JwtAuthGuard)
 @Resolver('category')
