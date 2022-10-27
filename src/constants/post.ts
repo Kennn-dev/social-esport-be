@@ -3,3 +3,7 @@ export enum TYPE_POST_VIEW {
   FOLLOWER = 'FOLLOWER',
   PUBLIC = 'PUBLIC',
 }
+export enum TYPE_POST {
+  MONTAGE = 'MONTAGE',
+  FEED = 'FEED',
+}

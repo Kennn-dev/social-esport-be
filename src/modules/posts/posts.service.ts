@@ -50,8 +50,9 @@ export class PostService {
     return `This action returns all post`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(query: any): Promise<Post> {
+    const post = await this.postModel.findOne(query);
+    return post;
   }
 
   async remove(id: string, author: TCurrentUser): Promise<StatusResponseDto> {

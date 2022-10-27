@@ -1,12 +1,11 @@
 import { User } from '@modules/user/models/users.schema';
-import { ObjectType } from '@nestjs/graphql';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema, Types } from 'mongoose';
 import { TYPE_POST_VIEW } from 'src/constants/post';
 import { TTimestamp } from 'src/types/common';
 
 export type PostDocument = Post & Document & TTimestamp;
-@ObjectType()
+@Schema({ timestamps: true })
 export class Post {
   _id: MongooseSchema.Types.ObjectId;
 

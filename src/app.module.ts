@@ -1,6 +1,7 @@
 import { CommentModule } from '@modules/comment/comment.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/users.module';
 import { UserService } from './modules/user/users.service';
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

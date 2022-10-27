@@ -1,61 +1,68 @@
 {
-  "name": "social-esport-be",
-  "version": "1.0.0",
-  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo_text.svg\" width=\"320\" alt=\"Nest Logo\" /></a> </p>",
-  "main": ".eslintrc.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "dev": "bash scripts/dev.sh",
-    "deploy": "bash scripts/deploy.sh",
-    "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kennn-dev/social-esport-be.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Kennn-dev/social-esport-be/issues"
-  },
-  "homepage": "https://github.com/Kennn-dev/social-esport-be#readme",
-  "dependencies": {
-    "@nestjs/apollo": "^10.0.14",
-    "@nestjs/common": "^8.4.6",
-    "@nestjs/core": "^8.4.6",
-    "@nestjs/graphql": "^10.0.15",
-    "@nestjs/jwt": "^8.0.1",
-    "@nestjs/mongoose": "^9.1.0",
-    "@nestjs/passport": "^8.2.1",
-    "@nestjs/platform-express": "^8.4.6",
-    "apollo-server-express": "^3.8.2",
-    "bcrypt": "^5.0.1",
-    "buffer-to-stream": "^1.0.0",
-    "class-validator": "^0.13.2",
-    "cloudinary": "^1.30.0",
-    "dotenv": "^16.0.1",
-    "passport-facebook": "^3.0.0",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
-    "source-map-support": "^0.5.21"
-  },
-  "devDependencies": {
-    "@types/multer": "^1.4.7",
-    "@types/passport-local": "^1.0.34"
-  }
+    "name": "social-esport-be",
+    "version": "1.0.0",
+    "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo_text.svg\" width=\"320\" alt=\"Nest Logo\" /></a> </p>",
+    "main": ".eslintrc.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "dev": "bash scripts/dev.sh",
+        "deploy": "bash scripts/deploy.sh",
+        "prebuild": "rimraf dist",
+        "build": "nest build",
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "start": "nest start",
+        "start:dev": "nest start --watch",
+        "start:debug": "nest start --debug --watch",
+        "start:prod": "node dist/main",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:cov": "jest --coverage",
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "codegen": "graphql-codegen --config codegen.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Kennn-dev/social-esport-be.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Kennn-dev/social-esport-be/issues"
+    },
+    "homepage": "https://github.com/Kennn-dev/social-esport-be#readme",
+    "dependencies": {
+        "@nestjs/apollo": "^10.0.14",
+        "@nestjs/common": "^8.4.6",
+        "@nestjs/config": "^2.1.0",
+        "@nestjs/core": "^8.4.6",
+        "@nestjs/graphql": "^10.0.15",
+        "@nestjs/jwt": "^8.0.1",
+        "@nestjs/mongoose": "^9.1.0",
+        "@nestjs/passport": "^8.2.1",
+        "@nestjs/platform-express": "^8.4.6",
+        "apollo-server-express": "^3.8.2",
+        "bcrypt": "^5.0.1",
+        "buffer-to-stream": "^1.0.0",
+        "class-validator": "^0.13.2",
+        "cloudinary": "^1.30.0",
+        "dotenv": "^16.0.1",
+        "passport-facebook": "^3.0.0",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-jwt": "^4.0.0",
+        "passport-local": "^1.0.0",
+        "source-map-support": "^0.5.21"
+    },
+    "devDependencies": {
+        "@graphql-codegen/cli": "2.13.7",
+        "@types/multer": "^1.4.7",
+        "@types/passport-local": "^1.0.34",
+        "@graphql-codegen/typescript": "2.8.0",
+        "@graphql-codegen/typescript-operations": "2.5.5",
+        "@graphql-codegen/typescript-stencil-apollo": "2.3.5",
+        "@graphql-codegen/introspection": "2.2.1"
+    }
 }
