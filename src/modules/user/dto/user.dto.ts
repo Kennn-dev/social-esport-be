@@ -34,6 +34,9 @@ export class InputLoginDto {
 @ObjectType()
 export class ResponseUserDto {
   @Field({ nullable: true })
+  _id: string;
+
+  @Field({ nullable: true })
   lastName: string;
 
   @Field({ nullable: true })

@@ -44,8 +44,11 @@ let AuthService = class AuthService {
     }
     async login(user) {
         return {
-            user,
-            accessToken: this.jwtService.sign({ email: user.email, sub: user._id }),
+            user: Object.assign(Object.assign({}, user), { _id: user._id.toString() }),
+            accessToken: this.jwtService.sign({
+                email: user.email,
+                sub: user._id.toString(),
+            }),
             tokenType: 'Bearer',
         };
     }

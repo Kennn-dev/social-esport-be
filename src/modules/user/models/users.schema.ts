@@ -42,15 +42,26 @@ UserSchema.pre<any>('save', function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   // only hash the password if it has been modified (or is new)
+
   if (!user.isModified('password')) return next();
   // generate a salt
 
   if (user.facebookId) return next();
   if (user.googleId) return next();
+
+  // Generate Avatar by default
+  if (!user.avatar) {
+    user.avatar = `https://source.boringavatars.com/beam/120/${
+      user.firstName + user.lastName
+    }?colors=ff4e0d,2a9d8f,e9c46a,0d52ff,001feb`;
+    next();
+  }
   hash(user.password, HASH.SALTROUNDS, function (err, hash) {
+    console.log(err);
     if (err) return next(err);
     // override the cleartext password with the hashed one
     user.password = hash;
+
     next();
   });
 });

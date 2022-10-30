@@ -64,7 +64,12 @@ exports.UserSchema.pre('save', function (next) {
         return next();
     if (user.googleId)
         return next();
+    if (!user.avatar) {
+        user.avatar = `https://source.boringavatars.com/beam/120/${user.firstName + user.lastName}?colors=ff4e0d,2a9d8f,e9c46a,0d52ff,001feb`;
+        next();
+    }
     (0, bcrypt_1.hash)(user.password, hash_1.HASH.SALTROUNDS, function (err, hash) {
+        console.log(err);
         if (err)
             return next(err);
         user.password = hash;

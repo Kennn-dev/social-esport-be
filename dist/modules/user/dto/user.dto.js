@@ -65,6 +65,10 @@ let ResponseUserDto = class ResponseUserDto {
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
+], ResponseUserDto.prototype, "_id", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
 ], ResponseUserDto.prototype, "lastName", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),

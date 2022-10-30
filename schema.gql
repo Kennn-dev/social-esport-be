@@ -23,6 +23,7 @@ type UserDto {
 }
 
 type ResponseUserDto {
+  _id: String
   lastName: String
   firstName: String
   email: String

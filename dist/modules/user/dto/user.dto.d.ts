@@ -13,6 +13,7 @@ export declare class InputLoginDto {
     password: string;
 }
 export declare class ResponseUserDto {
+    _id: string;
     lastName: string;
     firstName: string;
     email: string;
