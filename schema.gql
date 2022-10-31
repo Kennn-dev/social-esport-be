@@ -27,6 +27,8 @@ type ResponseUserDto {
   lastName: String
   firstName: String
   email: String
+  address: String
+  phoneNumber: String
   avatar: String
   backgroundImage: String
 }
@@ -44,6 +46,8 @@ type ResponseUserDetailDto {
   email: String!
   role: Float!
   avatar: String
+  address: String
+  phoneNumber: String
   backgroundImage: String
   follower: FollowDto!
   following: FollowDto!
@@ -116,9 +120,10 @@ input UpdateUserInputDto {
   lastName: String
   firstName: String
   email: String
-  password: String
   avatar: String
   backgroundImage: String
+  address: String
+  phoneNumber: String
 }
 
 input CreateCategoryInput {

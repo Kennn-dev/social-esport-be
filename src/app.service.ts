@@ -22,8 +22,8 @@ export class AppService {
     };
   }
   async destroy(publicId: string): Promise<any> {
-    const realPublicId = `social-esport/${publicId}`;
-    const { result } = await this.cloudinaryService.destroy(realPublicId);
+    //  template  : social-esport/publicId`;
+    const { result } = await this.cloudinaryService.destroy(publicId);
     return {
       status: HttpStatus.OK,
       result,

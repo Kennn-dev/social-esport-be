@@ -46,6 +46,12 @@ export class ResponseUserDto {
   email: string;
 
   @Field({ nullable: true })
+  address: string;
+
+  @Field({ nullable: true })
+  phoneNumber: string;
+
+  @Field({ nullable: true })
   avatar: string;
   @Field({ nullable: true })
   backgroundImage: string;
@@ -81,6 +87,11 @@ export class ResponseUserDetailDto {
   @Field({ nullable: true })
   avatar: string;
 
+  @Field({ nullable: true })
+  address: string;
+
+  @Field({ nullable: true })
+  phoneNumber: string;
   @Field({ nullable: true })
   backgroundImage: string;
 

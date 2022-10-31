@@ -26,6 +26,12 @@ export class User {
   @Prop({ default: null })
   backgroundImage: string;
 
+  @Prop({ default: null })
+  address: string;
+
+  @Prop({ default: null })
+  phoneNumber: string;
+
   @Prop({ default: 0 })
   role: number;
 

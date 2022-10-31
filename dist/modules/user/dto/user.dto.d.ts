@@ -17,6 +17,8 @@ export declare class ResponseUserDto {
     lastName: string;
     firstName: string;
     email: string;
+    address: string;
+    phoneNumber: string;
     avatar: string;
     backgroundImage: string;
 }
@@ -32,6 +34,8 @@ export declare class ResponseUserDetailDto {
     email: string;
     role: number;
     avatar: string;
+    address: string;
+    phoneNumber: string;
     backgroundImage: string;
     follower: FollowDto;
     following: FollowDto;

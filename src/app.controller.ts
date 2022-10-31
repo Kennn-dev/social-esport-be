@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
@@ -37,10 +38,9 @@ export class AppController {
     return this.appService.upload(file);
   }
 
-  @Post('/destroy/:publicId')
+  @Post('/destroy')
   // @UseGuards(JwtAuthGuard)
-  async destroyImage(@Param('publicId') publicId): Promise<UploadResponse> {
-    console.log(publicId);
+  async destroyImage(@Body('publicId') publicId): Promise<UploadResponse> {
     return this.appService.destroy(publicId);
   }
 

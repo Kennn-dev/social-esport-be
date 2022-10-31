@@ -28,15 +28,19 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
-], UpdateUserInputDto.prototype, "password", void 0);
-__decorate([
-    (0, graphql_1.Field)({ nullable: true }),
-    __metadata("design:type", String)
 ], UpdateUserInputDto.prototype, "avatar", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
 ], UpdateUserInputDto.prototype, "backgroundImage", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateUserInputDto.prototype, "address", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateUserInputDto.prototype, "phoneNumber", void 0);
 UpdateUserInputDto = __decorate([
     (0, graphql_1.InputType)()
 ], UpdateUserInputDto);

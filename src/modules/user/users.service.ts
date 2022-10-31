@@ -33,6 +33,7 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.userModel.find().exec();
   }
+
   async createUserWithSocialAccount(data: any): Promise<User> {
     try {
       const { email, facebookId, googleId } = data;
@@ -81,8 +82,17 @@ export class UserService {
         user._id.toString(),
       );
 
-      const { _id, avatar, backgroundImage, email, firstName, lastName, role } =
-        user;
+      const {
+        _id,
+        avatar,
+        backgroundImage,
+        email,
+        firstName,
+        lastName,
+        role,
+        address,
+        phoneNumber,
+      } = user;
       // console.log(_id.toString());
       const res: ResponseUserDetailDto = {
         _id: _id.toString(),
@@ -92,6 +102,8 @@ export class UserService {
         role,
         firstName,
         lastName,
+        address,
+        phoneNumber,
         follower: follow.follower,
         following: follow.following,
       };

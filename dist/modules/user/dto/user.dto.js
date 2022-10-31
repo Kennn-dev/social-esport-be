@@ -81,6 +81,14 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
+], ResponseUserDto.prototype, "address", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], ResponseUserDto.prototype, "phoneNumber", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
 ], ResponseUserDto.prototype, "avatar", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
@@ -134,6 +142,14 @@ __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
 ], ResponseUserDetailDto.prototype, "avatar", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], ResponseUserDetailDto.prototype, "address", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], ResponseUserDetailDto.prototype, "phoneNumber", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)

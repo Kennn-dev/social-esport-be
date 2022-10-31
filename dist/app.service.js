@@ -30,8 +30,7 @@ let AppService = class AppService {
         };
     }
     async destroy(publicId) {
-        const realPublicId = `social-esport/${publicId}`;
-        const { result } = await this.cloudinaryService.destroy(realPublicId);
+        const { result } = await this.cloudinaryService.destroy(publicId);
         return {
             status: common_1.HttpStatus.OK,
             result,

@@ -12,9 +12,13 @@ export class UpdateUserInputDto {
   email: string;
 
   @Field({ nullable: true })
-  password: string;
-  @Field({ nullable: true })
   avatar: string;
   @Field({ nullable: true })
   backgroundImage: string;
+
+  @Field({ nullable: true })
+  address: string;
+
+  @Field({ nullable: true })
+  phoneNumber: string;
 }

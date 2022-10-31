@@ -67,7 +67,7 @@ let UserService = class UserService {
         try {
             const user = await this.userModel.findById(id);
             const follow = await this.followService.getUserFollowData(user._id.toString());
-            const { _id, avatar, backgroundImage, email, firstName, lastName, role } = user;
+            const { _id, avatar, backgroundImage, email, firstName, lastName, role, address, phoneNumber, } = user;
             const res = {
                 _id: _id.toString(),
                 avatar,
@@ -76,6 +76,8 @@ let UserService = class UserService {
                 role,
                 firstName,
                 lastName,
+                address,
+                phoneNumber,
                 follower: follow.follower,
                 following: follow.following,
             };

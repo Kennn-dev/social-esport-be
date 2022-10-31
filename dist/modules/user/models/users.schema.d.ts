@@ -29,6 +29,8 @@ export declare class User {
     password: string;
     avatar: string;
     backgroundImage: string;
+    address: string;
+    phoneNumber: string;
     role: number;
     facebookId: string;
     googleId: string;

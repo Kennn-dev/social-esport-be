@@ -27,7 +27,6 @@ let AppController = class AppController {
         return this.appService.upload(file);
     }
     async destroyImage(publicId) {
-        console.log(publicId);
         return this.appService.destroy(publicId);
     }
     async facebookLogin() {
@@ -56,8 +55,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "upload", null);
 __decorate([
-    (0, common_1.Post)('/destroy/:publicId'),
-    __param(0, (0, common_1.Param)('publicId')),
+    (0, common_1.Post)('/destroy'),
+    __param(0, (0, common_1.Body)('publicId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)

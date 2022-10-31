@@ -40,6 +40,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "backgroundImage", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ default: null }),
+    __metadata("design:type", String)
+], User.prototype, "address", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null }),
+    __metadata("design:type", String)
+], User.prototype, "phoneNumber", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ default: 0 }),
     __metadata("design:type", Number)
 ], User.prototype, "role", void 0);
