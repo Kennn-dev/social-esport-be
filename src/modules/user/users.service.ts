@@ -1,3 +1,4 @@
+import { HASH } from 'src/constants/hash';
 import { FollowDto } from './../follow/dto/follow.dto';
 import { FollowService } from './../follow/follow.service';
 import {
@@ -14,6 +15,7 @@ import {
   Inject,
   forwardRef,
 } from '@nestjs/common';
+import { compareSync, hashSync } from 'bcrypt';
 import { InjectModel, Schema } from '@nestjs/mongoose';
 import { User, UserDocument } from './models/users.schema';
 
@@ -21,6 +23,7 @@ import { handleError } from 'src/utils/errors';
 import { UpdateUserInputDto } from './dto/update-user.dto';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { JWTPayload } from '../auth/jwt.strategy';
+import { ChangePasswordInputDto } from './dto/change-password-input.dto';
 
 @Injectable()
 export class UserService {
@@ -113,6 +116,7 @@ export class UserService {
       handleError(error);
     }
   }
+
   async findOne(params): Promise<User> {
     const user = await this.userModel.findOne(params);
     return user;
@@ -142,6 +146,32 @@ export class UserService {
       };
     } catch (error) {
       handleError(error);
+    }
+  }
+
+  async changePassword(
+    input: ChangePasswordInputDto,
+    userJwt: JWTPayload,
+  ): Promise<StatusResponseDto> {
+    const user = await this.userModel.findById(userJwt.userId);
+
+    if (input.newPassword !== input.confirmPassword) {
+      throw new Error('Two passwords not match ! 😢');
+    }
+
+    if (input.oldPassword) {
+      const _isSame = compareSync(input.oldPassword, user.password); // true
+      if (!_isSame) throw new Error('Old Password is not valid ! 😓');
+
+      const hashed = hashSync(input.newPassword, HASH.SALTROUNDS); //
+      // user.password = hashed;
+      await this.userModel.findByIdAndUpdate(userJwt.userId, {
+        password: hashed,
+      });
+      return {
+        message: 'Password save success ! 😎',
+        status: HttpStatus.OK,
+      };
     }
   }
 }

@@ -12,6 +12,7 @@ import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { UpdateUserInputDto } from './dto/update-user.dto';
 import { CurrentUser } from 'src/decorators/auth.decorators';
 import { JWTPayload } from '../auth/jwt.strategy';
+import { ChangePasswordInputDto } from './dto/change-password-input.dto';
 @Resolver(User)
 export class UserResolver {
   constructor(private userService: UserService) {}
@@ -52,5 +53,15 @@ export class UserResolver {
     @CurrentUser() user: JWTPayload,
   ) {
     return this.userService.update(id, inputUpdate, user);
+  }
+
+  // update
+  @Mutation(() => StatusResponseDto)
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @Args('input') input: ChangePasswordInputDto,
+    @CurrentUser() user: JWTPayload,
+  ) {
+    return this.userService.changePassword(input, user);
   }
 }

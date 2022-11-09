@@ -48,7 +48,6 @@ UserSchema.pre<any>('save', function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   // only hash the password if it has been modified (or is new)
-
   if (!user.isModified('password')) return next();
   // generate a salt
 
@@ -63,7 +62,7 @@ UserSchema.pre<any>('save', function (next) {
     next();
   }
   hash(user.password, HASH.SALTROUNDS, function (err, hash) {
-    console.log(err);
+    console.log(err, hash);
     if (err) return next(err);
     // override the cleartext password with the hashed one
     user.password = hash;

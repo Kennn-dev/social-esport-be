@@ -77,7 +77,7 @@ exports.UserSchema.pre('save', function (next) {
         next();
     }
     (0, bcrypt_1.hash)(user.password, hash_1.HASH.SALTROUNDS, function (err, hash) {
-        console.log(err);
+        console.log(err, hash);
         if (err)
             return next(err);
         user.password = hash;

@@ -5,6 +5,7 @@ import { HttpStatus } from '@nestjs/common';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { UpdateUserInputDto } from './dto/update-user.dto';
 import { JWTPayload } from '../auth/jwt.strategy';
+import { ChangePasswordInputDto } from './dto/change-password-input.dto';
 export declare class UserResolver {
     private userService;
     constructor(userService: UserService);
@@ -16,4 +17,5 @@ export declare class UserResolver {
         message: string;
     }>;
     updateUser(id: string, inputUpdate: UpdateUserInputDto, user: JWTPayload): Promise<StatusResponseDto>;
+    changePassword(input: ChangePasswordInputDto, user: JWTPayload): Promise<StatusResponseDto>;
 }

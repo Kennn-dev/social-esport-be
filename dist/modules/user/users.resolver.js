@@ -22,6 +22,7 @@ const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
 const response_status_dto_1 = require("../../common/dto/response-status.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const auth_decorators_1 = require("../../decorators/auth.decorators");
+const change_password_input_dto_1 = require("./dto/change-password-input.dto");
 let UserResolver = class UserResolver {
     constructor(userService) {
         this.userService = userService;
@@ -46,6 +47,9 @@ let UserResolver = class UserResolver {
     }
     async updateUser(id, inputUpdate, user) {
         return this.userService.update(id, inputUpdate, user);
+    }
+    async changePassword(input, user) {
+        return this.userService.changePassword(input, user);
     }
 };
 __decorate([
@@ -86,6 +90,15 @@ __decorate([
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserInputDto, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "updateUser", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => response_status_dto_1.StatusResponseDto),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, auth_decorators_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [change_password_input_dto_1.ChangePasswordInputDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "changePassword", null);
 UserResolver = __decorate([
     (0, graphql_1.Resolver)(users_schema_1.User),
     __metadata("design:paramtypes", [users_service_1.UserService])

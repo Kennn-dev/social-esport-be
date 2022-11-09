@@ -92,6 +92,7 @@ type Query {
 type Mutation {
   createUser(inputCreate: InputCreateUserDto!): StatusResponseDto!
   updateUser(id: String!, inputUpdate: UpdateUserInputDto!): StatusResponseDto!
+  changePassword(input: ChangePasswordInputDto!): StatusResponseDto!
   sendRequestFollow(followerId: String!): ResponseDto!
   unfollow(followId: String!): ResponseDto!
   removeFollow(id: Int!): Follow!
@@ -124,6 +125,12 @@ input UpdateUserInputDto {
   backgroundImage: String
   address: String
   phoneNumber: String
+}
+
+input ChangePasswordInputDto {
+  oldPassword: String!
+  newPassword: String!
+  confirmPassword: String!
 }
 
 input CreateCategoryInput {

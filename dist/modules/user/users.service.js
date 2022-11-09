@@ -13,9 +13,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
+const hash_1 = require("../../constants/hash");
 const follow_service_1 = require("./../follow/follow.service");
 const mongoose_1 = require("mongoose");
 const common_1 = require("@nestjs/common");
+const bcrypt_1 = require("bcrypt");
 const mongoose_2 = require("@nestjs/mongoose");
 const users_schema_1 = require("./models/users.schema");
 const errors_1 = require("../../utils/errors");
@@ -109,6 +111,25 @@ let UserService = class UserService {
         }
         catch (error) {
             (0, errors_1.handleError)(error);
+        }
+    }
+    async changePassword(input, userJwt) {
+        const user = await this.userModel.findById(userJwt.userId);
+        if (input.newPassword !== input.confirmPassword) {
+            throw new Error('Two passwords not match ! 😢');
+        }
+        if (input.oldPassword) {
+            const _isSame = (0, bcrypt_1.compareSync)(input.oldPassword, user.password);
+            if (!_isSame)
+                throw new Error('Old Password is not valid ! 😓');
+            const hashed = (0, bcrypt_1.hashSync)(input.newPassword, hash_1.HASH.SALTROUNDS);
+            await this.userModel.findByIdAndUpdate(userJwt.userId, {
+                password: hashed,
+            });
+            return {
+                message: 'Password save success ! 😎',
+                status: common_1.HttpStatus.OK,
+            };
         }
     }
 };
