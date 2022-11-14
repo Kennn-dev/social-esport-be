@@ -84,6 +84,7 @@ type Query {
   hello: String!
   getAllUser: [UserDto!]!
   getUserById(id: String!): ResponseUserDetailDto!
+  getFriendsList: [UserDto!]!
   follow: [Follow!]!
   getAllCategory: [CategoryDto!]!
   getDetailCategory(id: Int!): CategoryDto!
@@ -93,6 +94,8 @@ type Mutation {
   createUser(inputCreate: InputCreateUserDto!): StatusResponseDto!
   updateUser(id: String!, inputUpdate: UpdateUserInputDto!): StatusResponseDto!
   changePassword(input: ChangePasswordInputDto!): StatusResponseDto!
+  sendFriendRequest(friendId: String!): StatusResponseDto!
+  replyFriendRequest(requesterId: String!, isAccept: Boolean!): StatusResponseDto!
   sendRequestFollow(followerId: String!): ResponseDto!
   unfollow(followId: String!): ResponseDto!
   removeFollow(id: Int!): Follow!

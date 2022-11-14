@@ -1,18 +1,22 @@
 import { FollowModule } from './../follow/follow.module';
-import { UserService } from './users.service';
+import { Friend, FriendSchema } from './models/friends.schema';
 import { User, UserSchema } from './models/users.schema';
 import { UserResolver } from './users.resolver';
+import { UserService } from './users.service';
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Category, CategorySchema } from '../category/models/category.schema';
-import { FollowService } from '../follow/follow.service';
-import { forwardRef } from '@nestjs/common';
 import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      {
+        name: Friend.name,
+        schema: FriendSchema,
+      },
+    ]),
     forwardRef(() => FollowModule),
     CategoryModule,
   ],

@@ -9,20 +9,26 @@ var UserModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModule = void 0;
 const follow_module_1 = require("./../follow/follow.module");
-const users_service_1 = require("./users.service");
+const friends_schema_1 = require("./models/friends.schema");
 const users_schema_1 = require("./models/users.schema");
 const users_resolver_1 = require("./users.resolver");
+const users_service_1 = require("./users.service");
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const common_2 = require("@nestjs/common");
 const category_module_1 = require("../category/category.module");
 let UserModule = UserModule_1 = class UserModule {
 };
 UserModule = UserModule_1 = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: users_schema_1.User.name, schema: users_schema_1.UserSchema }]),
-            (0, common_2.forwardRef)(() => follow_module_1.FollowModule),
+            mongoose_1.MongooseModule.forFeature([
+                { name: users_schema_1.User.name, schema: users_schema_1.UserSchema },
+                {
+                    name: friends_schema_1.Friend.name,
+                    schema: friends_schema_1.FriendSchema,
+                },
+            ]),
+            (0, common_1.forwardRef)(() => follow_module_1.FollowModule),
             category_module_1.CategoryModule,
         ],
         controllers: [],

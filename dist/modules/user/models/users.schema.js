@@ -80,6 +80,7 @@ exports.UserSchema.pre('save', function (next) {
         console.log(err, hash);
         if (err)
             return next(err);
+        console.log('hashing');
         user.password = hash;
         next();
     });

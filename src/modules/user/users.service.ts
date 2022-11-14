@@ -1,34 +1,31 @@
-import { HASH } from 'src/constants/hash';
-import { FollowDto } from './../follow/dto/follow.dto';
-import { FollowService } from './../follow/follow.service';
 import {
-  InputCreateUserDto,
-  ResponseUserDto,
-  ResponseUserDetailDto,
-} from './dto/user.dto';
-import { Model } from 'mongoose';
-import {
+  forwardRef,
   HttpException,
-  Injectable,
-  NotFoundException,
   HttpStatus,
   Inject,
-  forwardRef,
+  Injectable,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { compareSync, hashSync } from 'bcrypt';
-import { InjectModel, Schema } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { HASH } from 'src/constants/hash';
+import { FollowService } from './../follow/follow.service';
+import { InputCreateUserDto, ResponseUserDetailDto } from './dto/user.dto';
+import { Friend, FriendDocument } from './models/friends.schema';
 import { User, UserDocument } from './models/users.schema';
 
-import { handleError } from 'src/utils/errors';
-import { UpdateUserInputDto } from './dto/update-user.dto';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
+import { handleError } from 'src/utils/errors';
 import { JWTPayload } from '../auth/jwt.strategy';
 import { ChangePasswordInputDto } from './dto/change-password-input.dto';
+import { UpdateUserInputDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Friend.name)
+    private readonly friendModel: Model<FriendDocument>,
     @Inject(forwardRef(() => FollowService))
     private followService: FollowService,
   ) {}
@@ -70,7 +67,8 @@ export class UserService {
           400,
         );
       const user = new this.userModel(createUserDto);
-      return await user.save();
+      await user.save();
+      return user;
     } catch (error) {
       console.log(error);
 
@@ -173,5 +171,72 @@ export class UserService {
         status: HttpStatus.OK,
       };
     }
+  }
+
+  async sendFriendRequest(
+    friendId: string,
+    userJwt: JWTPayload,
+  ): Promise<StatusResponseDto> {
+    const friend = await this.userModel.findById(friendId);
+    const user = await this.userModel.findById(userJwt.userId);
+
+    if (!friend || !user) throw new Error('Invalid User or Friend ID');
+
+    const payload = {
+      userId: userJwt.userId,
+      friendId,
+    };
+    const friendShip = new this.friendModel(payload);
+    await friendShip.save();
+
+    return {
+      message: 'Your request was send successfully ! 🎉',
+      status: HttpStatus.OK,
+    };
+  }
+
+  async replyFriendRequest(
+    requesterId: string,
+    userJwt: JWTPayload,
+    isAccept: boolean,
+  ): Promise<StatusResponseDto> {
+    const requester = await this.userModel.findById(requesterId);
+    const user = await this.userModel.findById(userJwt.userId);
+
+    if (!requester || !user) throw new Error('Invalid User or Friend ID');
+    let response = {
+      message: 'Your request was send successfully ! 🎉',
+      status: HttpStatus.OK,
+    };
+    // Accept
+    if (isAccept) {
+      response.message = 'Accepted';
+      const payload = {
+        userId: userJwt.userId,
+        friendId: requesterId,
+      };
+      const friendShip = new this.friendModel(payload);
+      await friendShip.save();
+    } else {
+      // Deny
+      response.message = 'Request Canceled';
+
+      const req = await this.friendModel.findOne({
+        userId: requesterId,
+        friendId: userJwt.userId,
+      });
+      console.log('Deleted', req._id);
+
+      await this.friendModel.findOneAndDelete({
+        userId: requesterId,
+        friendId: userJwt.userId,
+      });
+    }
+
+    return response;
+  }
+
+  async getFriendList(userJwt: JWTPayload) {
+    const user = await this.userModel.findById(userJwt.userId);
   }
 }

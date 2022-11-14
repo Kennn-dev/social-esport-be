@@ -13,16 +13,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const users_service_1 = require("./users.service");
-const graphql_1 = require("@nestjs/graphql");
-const users_schema_1 = require("./models/users.schema");
-const user_dto_1 = require("./dto/user.dto");
 const common_1 = require("@nestjs/common");
-const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
+const graphql_1 = require("@nestjs/graphql");
 const response_status_dto_1 = require("../../common/dto/response-status.dto");
-const update_user_dto_1 = require("./dto/update-user.dto");
 const auth_decorators_1 = require("../../decorators/auth.decorators");
+const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
 const change_password_input_dto_1 = require("./dto/change-password-input.dto");
+const update_user_dto_1 = require("./dto/update-user.dto");
+const user_dto_1 = require("./dto/user.dto");
+const users_schema_1 = require("./models/users.schema");
+const users_service_1 = require("./users.service");
 let UserResolver = class UserResolver {
     constructor(userService) {
         this.userService = userService;
@@ -38,6 +38,7 @@ let UserResolver = class UserResolver {
     }
     async createNewUser(inputCreate) {
         const user = await this.userService.create(inputCreate);
+        console.log(user);
         if (user) {
             return {
                 status: common_1.HttpStatus.OK,
@@ -50,6 +51,15 @@ let UserResolver = class UserResolver {
     }
     async changePassword(input, user) {
         return this.userService.changePassword(input, user);
+    }
+    async getFriendsList() {
+        return this.userService.findAll();
+    }
+    async sendFriendRequest(friendId, user) {
+        return this.userService.sendFriendRequest(friendId, user);
+    }
+    async replyFriendRequest(requesterId, isAccept, user) {
+        return this.userService.replyFriendRequest(requesterId, user, isAccept);
     }
 };
 __decorate([
@@ -99,6 +109,32 @@ __decorate([
     __metadata("design:paramtypes", [change_password_input_dto_1.ChangePasswordInputDto, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Query)(() => [user_dto_1.UserDto]),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "getFriendsList", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => response_status_dto_1.StatusResponseDto, { name: 'sendFriendRequest' }),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, graphql_1.Args)('friendId')),
+    __param(1, (0, auth_decorators_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "sendFriendRequest", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => response_status_dto_1.StatusResponseDto, { name: 'replyFriendRequest' }),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, graphql_1.Args)('requesterId')),
+    __param(1, (0, graphql_1.Args)('isAccept')),
+    __param(2, (0, auth_decorators_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Boolean, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "replyFriendRequest", null);
 UserResolver = __decorate([
     (0, graphql_1.Resolver)(users_schema_1.User),
     __metadata("design:paramtypes", [users_service_1.UserService])

@@ -1,18 +1,18 @@
-import { UserService } from './users.service';
+import { HttpStatus, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from './models/users.schema';
+import { StatusResponseDto } from 'src/common/dto/response-status.dto';
+import { CurrentUser } from 'src/decorators/auth.decorators';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JWTPayload } from '../auth/jwt.strategy';
+import { ChangePasswordInputDto } from './dto/change-password-input.dto';
+import { UpdateUserInputDto } from './dto/update-user.dto';
 import {
   InputCreateUserDto,
   ResponseUserDetailDto,
   UserDto,
 } from './dto/user.dto';
-import { HttpStatus, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { StatusResponseDto } from 'src/common/dto/response-status.dto';
-import { UpdateUserInputDto } from './dto/update-user.dto';
-import { CurrentUser } from 'src/decorators/auth.decorators';
-import { JWTPayload } from '../auth/jwt.strategy';
-import { ChangePasswordInputDto } from './dto/change-password-input.dto';
+import { User } from './models/users.schema';
+import { UserService } from './users.service';
 @Resolver(User)
 export class UserResolver {
   constructor(private userService: UserService) {}
@@ -36,6 +36,8 @@ export class UserResolver {
   @Mutation(() => StatusResponseDto, { name: 'createUser' })
   async createNewUser(@Args('inputCreate') inputCreate: InputCreateUserDto) {
     const user = await this.userService.create(inputCreate);
+    console.log(user);
+
     if (user) {
       return {
         status: HttpStatus.OK,
@@ -55,7 +57,7 @@ export class UserResolver {
     return this.userService.update(id, inputUpdate, user);
   }
 
-  // update
+  // update password
   @Mutation(() => StatusResponseDto)
   @UseGuards(JwtAuthGuard)
   async changePassword(
@@ -63,5 +65,33 @@ export class UserResolver {
     @CurrentUser() user: JWTPayload,
   ) {
     return this.userService.changePassword(input, user);
+  }
+
+  // Get Friends request
+  @UseGuards(JwtAuthGuard)
+  @Query(() => [UserDto])
+  async getFriendsList() {
+    return this.userService.findAll();
+  }
+
+  // Send Friend Request
+  @Mutation(() => StatusResponseDto, { name: 'sendFriendRequest' })
+  @UseGuards(JwtAuthGuard)
+  async sendFriendRequest(
+    @Args('friendId') friendId: string,
+    @CurrentUser() user: JWTPayload,
+  ) {
+    return this.userService.sendFriendRequest(friendId, user);
+  }
+
+  // Receive Friend Request
+  @Mutation(() => StatusResponseDto, { name: 'replyFriendRequest' })
+  @UseGuards(JwtAuthGuard)
+  async replyFriendRequest(
+    @Args('requesterId') requesterId: string,
+    @Args('isAccept') isAccept: boolean,
+    @CurrentUser() user: JWTPayload,
+  ) {
+    return this.userService.replyFriendRequest(requesterId, user, isAccept);
   }
 }
