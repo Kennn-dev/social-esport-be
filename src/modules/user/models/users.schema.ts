@@ -46,14 +46,28 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre<any>('save', function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
+  let user = this;
+
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();
   // generate a salt
 
   if (user.facebookId) return next();
   if (user.googleId) return next();
+  hash(user.password, HASH.SALTROUNDS, function (err, hash) {
+    console.log(err, hash);
 
+    if (err) return next(err);
+    // override the cleartext password with the hashed one
+
+    user.password = String(hash);
+
+    next();
+  });
+});
+UserSchema.pre<any>('save', function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  let user = this;
   // Generate Avatar by default
   if (!user.avatar) {
     user.avatar = `https://source.boringavatars.com/beam/120/${
@@ -61,18 +75,7 @@ UserSchema.pre<any>('save', function (next) {
     }?colors=ff4e0d,2a9d8f,e9c46a,0d52ff,001feb`;
     next();
   }
-  hash(user.password, HASH.SALTROUNDS, function (err, hash) {
-    console.log(err, hash);
-    if (err) return next(err);
-    // override the cleartext password with the hashed one
-    console.log('hashing');
-
-    user.password = hash;
-
-    next();
-  });
 });
-
 UserSchema.methods.comparePassword = function (
   incomingPassword: string,
 ): boolean {

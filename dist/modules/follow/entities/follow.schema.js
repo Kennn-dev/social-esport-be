@@ -18,11 +18,11 @@ let Follow = class Follow {
 };
 __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Schema.Types.ObjectId, ref: users_schema_1.User.name }),
-    __metadata("design:type", Object)
+    __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Follow.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Schema.Types.ObjectId, ref: users_schema_1.User.name }),
-    __metadata("design:type", Object)
+    __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Follow.prototype, "followerId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: follow_1.FOLLOW_STATUS.HOLD }),

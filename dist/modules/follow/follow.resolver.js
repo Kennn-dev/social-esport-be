@@ -13,13 +13,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FollowResolver = void 0;
-const jwt_auth_guard_1 = require("./../../guards/jwt-auth.guard");
 const common_1 = require("@nestjs/common");
-const user_dto_1 = require("./../user/dto/user.dto");
 const graphql_1 = require("@nestjs/graphql");
-const follow_service_1 = require("./follow.service");
-const follow_entity_1 = require("./entities/follow.entity");
 const auth_decorators_1 = require("../../decorators/auth.decorators");
+const jwt_auth_guard_1 = require("./../../guards/jwt-auth.guard");
+const user_dto_1 = require("./../user/dto/user.dto");
+const get_follower_dto_1 = require("./dto/get-follower.dto");
+const follow_entity_1 = require("./entities/follow.entity");
+const follow_service_1 = require("./follow.service");
 let FollowResolver = class FollowResolver {
     constructor(followService) {
         this.followService = followService;
@@ -27,18 +28,18 @@ let FollowResolver = class FollowResolver {
     create(followerId, user) {
         return this.followService.sendRequest(user.userId, followerId);
     }
-    unfollow(id) {
-        return this.followService.unfollow(id);
+    unfollow(followerId, user) {
+        return this.followService.unfollow(user.userId, followerId);
     }
-    findAll() {
-        return this.followService.findAll();
+    getFollowers(user) {
+        return this.followService.getUserFollower(user.userId);
     }
-    removeFollow(id) {
-        return this.followService.remove(id);
+    getFollowing(user) {
+        return this.followService.getUserFollowing(user.userId);
     }
 };
 __decorate([
-    (0, graphql_1.Mutation)(() => user_dto_1.ResponseDto, { name: 'sendRequestFollow' }),
+    (0, graphql_1.Mutation)(() => user_dto_1.ResponseDto, { name: 'follow' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, graphql_1.Args)('followerId')),
     __param(1, (0, auth_decorators_1.CurrentUser)()),
@@ -49,24 +50,28 @@ __decorate([
 __decorate([
     (0, graphql_1.Mutation)(() => user_dto_1.ResponseDto, { name: 'unfollow' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, graphql_1.Args)('followId')),
+    __param(0, (0, graphql_1.Args)('followerId')),
+    __param(1, (0, auth_decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], FollowResolver.prototype, "unfollow", null);
 __decorate([
-    (0, graphql_1.Query)(() => [follow_entity_1.Follow], { name: 'follow' }),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Query)(() => [get_follower_dto_1.FollowerDto], { name: 'getFollowers' }),
+    __param(0, (0, auth_decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], FollowResolver.prototype, "findAll", null);
+], FollowResolver.prototype, "getFollowers", null);
 __decorate([
-    (0, graphql_1.Mutation)(() => follow_entity_1.Follow),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Query)(() => [get_follower_dto_1.FollowerDto], { name: 'getFollowing' }),
+    __param(0, (0, auth_decorators_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], FollowResolver.prototype, "removeFollow", null);
+], FollowResolver.prototype, "getFollowing", null);
 FollowResolver = __decorate([
     (0, graphql_1.Resolver)(() => follow_entity_1.Follow),
     __metadata("design:paramtypes", [follow_service_1.FollowService])

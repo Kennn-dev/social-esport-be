@@ -17,10 +17,11 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const follow_1 = require("../../constants/follow");
+const utils_1 = require("../../utils");
 const errors_1 = require("../../utils/errors");
 const users_service_1 = require("../user/users.service");
 const follow_schema_1 = require("./entities/follow.schema");
-const utils_1 = require("./utils");
+const utils_2 = require("./utils");
 let FollowService = class FollowService {
     constructor(userService, followModel) {
         this.userService = userService;
@@ -28,21 +29,27 @@ let FollowService = class FollowService {
     }
     async sendRequest(senderId, followerId) {
         try {
-            const sender = await this.userService.findOne({ id: senderId });
-            const follower = await this.userService.findOne({ id: followerId });
+            console.log({ followerId, senderId });
+            const sender = await this.userService.findOne({
+                _id: (0, utils_1.toObjectId)(senderId),
+            });
+            const follower = await this.userService.findOne({
+                _id: (0, utils_1.toObjectId)(followerId),
+            });
             if (!sender || !follower)
                 throw new Error("User doesn't exits bruhh");
             const isRequested = await this.followModel.findOne({
-                followerId,
-                userId: senderId,
+                followerId: follower._id,
+                userId: sender._id,
             });
             if (isRequested)
                 throw new Error('You have already submitted this request');
             const data = {
-                followerId,
-                userId: senderId,
+                followerId: follower._id,
+                userId: sender._id,
                 status: follow_1.FOLLOW_STATUS.HOLD,
             };
+            console.log(data);
             const result = new this.followModel(data);
             await result.save();
             return {
@@ -55,36 +62,26 @@ let FollowService = class FollowService {
             (0, errors_1.handleError)(error);
         }
     }
-    async unfollow(followId) {
+    async unfollow(senderId, followerId) {
         try {
-            const isCompleted = await this.followModel.findByIdAndDelete(followId);
-            if (isCompleted) {
-                return {
-                    message: 'Unfollowed',
-                    status: common_1.HttpStatus.OK,
-                };
+            const sender = await this.userService.findOne({ id: senderId });
+            const follower = await this.userService.findOne({ id: followerId });
+            if (!sender || !follower) {
+                throw new Error('Invalid request');
             }
-        }
-        catch (error) {
-            console.log(error);
-            (0, errors_1.handleError)(error);
-        }
-    }
-    async replyRequest(senderId, status) {
-        try {
-            const follower = await this.followModel.findOne({
-                followerId: senderId,
+            const isCompleted = await this.followModel.findOneAndDelete({
+                userId: sender._id,
+                followerId: follower._id,
             });
-            if (!follower)
-                throw new common_1.HttpException('Cannot find User', 503);
-            follower.status = status;
-            follower.save();
+            if (!isCompleted)
+                throw new Error('Invalid request');
             return {
+                message: 'Unfollowed',
                 status: common_1.HttpStatus.OK,
-                message: 'Success',
             };
         }
         catch (error) {
+            console.log(error);
             (0, errors_1.handleError)(error);
         }
     }
@@ -95,7 +92,7 @@ let FollowService = class FollowService {
         return this.followModel.find();
     }
     async getUserFollowData(userId) {
-        const aggregateQueryFollower = (0, utils_1.aggregateUser)({
+        const aggregateQueryFollower = (0, utils_2.aggregateUser)({
             userId: new mongoose_2.default.Types.ObjectId(userId),
         }, {
             localField: 'followerId',
@@ -110,7 +107,7 @@ let FollowService = class FollowService {
         })
             .count();
         const listUserFollower = followerDt.map((fl) => (Object.assign(Object.assign({}, fl.follower[0]), { _id: fl.follower[0].id.toString() })));
-        const aggregateQueryFollowing = (0, utils_1.aggregateUser)({
+        const aggregateQueryFollowing = (0, utils_2.aggregateUser)({
             followerId: new mongoose_2.default.Types.ObjectId(userId),
         }, {
             localField: 'userId',
@@ -129,6 +126,82 @@ let FollowService = class FollowService {
             follower: { listUsers: listUserFollower, total: countFollower },
             following: { listUsers: listUserFollowing, total: countFollowing },
         };
+    }
+    async getUserFollower(userId) {
+        const query = [
+            {
+                $match: {
+                    followerId: (0, utils_1.toObjectId)(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user',
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                lastName: 1,
+                                firstName: 1,
+                                email: 1,
+                                address: 1,
+                                phoneNumber: 1,
+                                avatar: 1,
+                                backgroundImage: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $unwind: {
+                    path: '$user',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $limit: 10,
+            },
+        ];
+        const result = this.followModel.aggregate(query);
+        return result;
+    }
+    async getUserFollowing(userId) {
+        const query = [
+            {
+                $match: {
+                    userId: (0, utils_1.toObjectId)(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'followerId',
+                    foreignField: '_id',
+                    as: 'user',
+                    pipeline: [
+                        {
+                            $project: {
+                                password: 0,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $unwind: {
+                    path: '$user',
+                },
+            },
+            {
+                $limit: 10,
+            },
+        ];
+        const result = this.followModel.aggregate(query);
+        return result;
     }
     update(id) {
         return `This action updates a #${id} follow`;

@@ -37,29 +37,13 @@ let UserResolver = class UserResolver {
         return this.userService.getUserById(id);
     }
     async createNewUser(inputCreate) {
-        const user = await this.userService.create(inputCreate);
-        console.log(user);
-        if (user) {
-            return {
-                status: common_1.HttpStatus.OK,
-                message: 'Created succesfully !',
-            };
-        }
+        return this.userService.create(inputCreate);
     }
     async updateUser(id, inputUpdate, user) {
         return this.userService.update(id, inputUpdate, user);
     }
     async changePassword(input, user) {
         return this.userService.changePassword(input, user);
-    }
-    async getFriendsList() {
-        return this.userService.findAll();
-    }
-    async sendFriendRequest(friendId, user) {
-        return this.userService.sendFriendRequest(friendId, user);
-    }
-    async replyFriendRequest(requesterId, isAccept, user) {
-        return this.userService.replyFriendRequest(requesterId, user, isAccept);
     }
 };
 __decorate([
@@ -109,32 +93,6 @@ __decorate([
     __metadata("design:paramtypes", [change_password_input_dto_1.ChangePasswordInputDto, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "changePassword", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, graphql_1.Query)(() => [user_dto_1.UserDto]),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "getFriendsList", null);
-__decorate([
-    (0, graphql_1.Mutation)(() => response_status_dto_1.StatusResponseDto, { name: 'sendFriendRequest' }),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, graphql_1.Args)('friendId')),
-    __param(1, (0, auth_decorators_1.CurrentUser)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "sendFriendRequest", null);
-__decorate([
-    (0, graphql_1.Mutation)(() => response_status_dto_1.StatusResponseDto, { name: 'replyFriendRequest' }),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, graphql_1.Args)('requesterId')),
-    __param(1, (0, graphql_1.Args)('isAccept')),
-    __param(2, (0, auth_decorators_1.CurrentUser)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Boolean, Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "replyFriendRequest", null);
 UserResolver = __decorate([
     (0, graphql_1.Resolver)(users_schema_1.User),
     __metadata("design:paramtypes", [users_service_1.UserService])

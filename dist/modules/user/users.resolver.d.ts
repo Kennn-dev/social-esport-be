@@ -1,4 +1,3 @@
-import { HttpStatus } from '@nestjs/common';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { JWTPayload } from '../auth/jwt.strategy';
 import { ChangePasswordInputDto } from './dto/change-password-input.dto';
@@ -12,13 +11,7 @@ export declare class UserResolver {
     hello(): Promise<string>;
     getAllUser(): Promise<User[]>;
     getUser(id: string): Promise<ResponseUserDetailDto>;
-    createNewUser(inputCreate: InputCreateUserDto): Promise<{
-        status: HttpStatus;
-        message: string;
-    }>;
+    createNewUser(inputCreate: InputCreateUserDto): Promise<StatusResponseDto>;
     updateUser(id: string, inputUpdate: UpdateUserInputDto, user: JWTPayload): Promise<StatusResponseDto>;
     changePassword(input: ChangePasswordInputDto, user: JWTPayload): Promise<StatusResponseDto>;
-    getFriendsList(): Promise<User[]>;
-    sendFriendRequest(friendId: string, user: JWTPayload): Promise<StatusResponseDto>;
-    replyFriendRequest(requesterId: string, isAccept: boolean, user: JWTPayload): Promise<StatusResponseDto>;
 }

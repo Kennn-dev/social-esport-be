@@ -1,18 +1,19 @@
-import { JwtAuthGuard } from './../../guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { ResponseDto } from './../user/dto/user.dto';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { FollowService } from './follow.service';
-import { Follow } from './entities/follow.entity';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/decorators/auth.decorators';
 import { TCurrentUser } from 'src/types/user';
+import { JwtAuthGuard } from './../../guards/jwt-auth.guard';
+import { ResponseDto } from './../user/dto/user.dto';
 import {} from './dto/follow.dto';
+import { FollowerDto } from './dto/get-follower.dto';
+import { Follow } from './entities/follow.entity';
+import { FollowService } from './follow.service';
 
 @Resolver(() => Follow)
 export class FollowResolver {
   constructor(private readonly followService: FollowService) {}
 
-  @Mutation(() => ResponseDto, { name: 'sendRequestFollow' })
+  @Mutation(() => ResponseDto, { name: 'follow' })
   @UseGuards(JwtAuthGuard)
   create(
     @Args('followerId') followerId: string,
@@ -23,22 +24,22 @@ export class FollowResolver {
 
   @Mutation(() => ResponseDto, { name: 'unfollow' })
   @UseGuards(JwtAuthGuard)
-  unfollow(@Args('followId') id: string) {
-    return this.followService.unfollow(id);
+  unfollow(
+    @Args('followerId') followerId: string,
+    @CurrentUser() user: TCurrentUser,
+  ) {
+    return this.followService.unfollow(user.userId, followerId);
   }
 
-  @Query(() => [Follow], { name: 'follow' })
-  findAll() {
-    return this.followService.findAll();
+  @UseGuards(JwtAuthGuard)
+  @Query(() => [FollowerDto], { name: 'getFollowers' })
+  getFollowers(@CurrentUser() user: TCurrentUser) {
+    return this.followService.getUserFollower(user.userId);
   }
 
-  // @Query(() => GetFollowDataResponseDto, { name: 'getFollowData' })
-  // getUserFollowData(@CurrentUser() user: TCurrentUser) {
-  //   return this.followService.getUserFollowData(user.userId);
-  // }
-
-  @Mutation(() => Follow)
-  removeFollow(@Args('id', { type: () => Int }) id: number) {
-    return this.followService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  @Query(() => [FollowerDto], { name: 'getFollowing' })
+  getFollowing(@CurrentUser() user: TCurrentUser) {
+    return this.followService.getUserFollowing(user.userId);
   }
 }

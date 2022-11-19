@@ -65,25 +65,27 @@ User = __decorate([
 exports.User = User;
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
 exports.UserSchema.pre('save', function (next) {
-    const user = this;
+    let user = this;
     if (!user.isModified('password'))
         return next();
     if (user.facebookId)
         return next();
     if (user.googleId)
         return next();
-    if (!user.avatar) {
-        user.avatar = `https://source.boringavatars.com/beam/120/${user.firstName + user.lastName}?colors=ff4e0d,2a9d8f,e9c46a,0d52ff,001feb`;
-        next();
-    }
     (0, bcrypt_1.hash)(user.password, hash_1.HASH.SALTROUNDS, function (err, hash) {
         console.log(err, hash);
         if (err)
             return next(err);
-        console.log('hashing');
-        user.password = hash;
+        user.password = String(hash);
         next();
     });
+});
+exports.UserSchema.pre('save', function (next) {
+    let user = this;
+    if (!user.avatar) {
+        user.avatar = `https://source.boringavatars.com/beam/120/${user.firstName + user.lastName}?colors=ff4e0d,2a9d8f,e9c46a,0d52ff,001feb`;
+        next();
+    }
 });
 exports.UserSchema.methods.comparePassword = function (incomingPassword) {
     const user = this;

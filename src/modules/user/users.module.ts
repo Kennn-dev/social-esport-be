@@ -1,5 +1,4 @@
 import { FollowModule } from './../follow/follow.module';
-import { Friend, FriendSchema } from './models/friends.schema';
 import { User, UserSchema } from './models/users.schema';
 import { UserResolver } from './users.resolver';
 import { UserService } from './users.service';
@@ -10,13 +9,7 @@ import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      {
-        name: Friend.name,
-        schema: FriendSchema,
-      },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     forwardRef(() => FollowModule),
     CategoryModule,
   ],

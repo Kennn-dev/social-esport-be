@@ -27,8 +27,8 @@ import { TTimestamp } from 'src/types/common';
 export declare type FollowDocument = Follow & Document & TTimestamp;
 export declare class Follow {
     _id: MongooseSchema.Types.ObjectId;
-    userId: string | Types.ObjectId;
-    followerId: string | Types.ObjectId;
+    userId: Types.ObjectId;
+    followerId: Types.ObjectId;
     status: number;
 }
 export declare const FollowSchema: MongooseSchema<Follow, import("mongoose").Model<Follow, any, any, any, any>, {}, {}, {}, {}, "type", Follow>;

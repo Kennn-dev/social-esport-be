@@ -18,14 +18,12 @@ const mongoose_1 = require("@nestjs/mongoose");
 const bcrypt_1 = require("bcrypt");
 const mongoose_2 = require("mongoose");
 const hash_1 = require("../../constants/hash");
-const follow_service_1 = require("./../follow/follow.service");
-const friends_schema_1 = require("./models/friends.schema");
-const users_schema_1 = require("./models/users.schema");
 const errors_1 = require("../../utils/errors");
+const follow_service_1 = require("./../follow/follow.service");
+const users_schema_1 = require("./models/users.schema");
 let UserService = class UserService {
-    constructor(userModel, friendModel, followService) {
+    constructor(userModel, followService) {
         this.userModel = userModel;
-        this.friendModel = friendModel;
         this.followService = followService;
     }
     async findAll() {
@@ -61,7 +59,10 @@ let UserService = class UserService {
                 throw new common_1.HttpException('Password and Password confirm are not match', 400);
             const user = new this.userModel(createUserDto);
             await user.save();
-            return user;
+            return {
+                status: common_1.HttpStatus.OK,
+                message: 'Created succesfully !',
+            };
         }
         catch (error) {
             console.log(error);
@@ -100,7 +101,6 @@ let UserService = class UserService {
     async update(id, data, userReq) {
         try {
             const user = await this.userModel.findByIdAndUpdate(id, data);
-            console.log(user._id.toString(), userReq.userId, user._id.toString() == userReq.userId);
             if (user && user._id.toString() == userReq.userId) {
                 return {
                     status: common_1.HttpStatus.OK,
@@ -135,65 +135,12 @@ let UserService = class UserService {
             };
         }
     }
-    async sendFriendRequest(friendId, userJwt) {
-        const friend = await this.userModel.findById(friendId);
-        const user = await this.userModel.findById(userJwt.userId);
-        if (!friend || !user)
-            throw new Error('Invalid User or Friend ID');
-        const payload = {
-            userId: userJwt.userId,
-            friendId,
-        };
-        const friendShip = new this.friendModel(payload);
-        await friendShip.save();
-        return {
-            message: 'Your request was send successfully ! 🎉',
-            status: common_1.HttpStatus.OK,
-        };
-    }
-    async replyFriendRequest(requesterId, userJwt, isAccept) {
-        const requester = await this.userModel.findById(requesterId);
-        const user = await this.userModel.findById(userJwt.userId);
-        if (!requester || !user)
-            throw new Error('Invalid User or Friend ID');
-        let response = {
-            message: 'Your request was send successfully ! 🎉',
-            status: common_1.HttpStatus.OK,
-        };
-        if (isAccept) {
-            response.message = 'Accepted';
-            const payload = {
-                userId: userJwt.userId,
-                friendId: requesterId,
-            };
-            const friendShip = new this.friendModel(payload);
-            await friendShip.save();
-        }
-        else {
-            response.message = 'Request Canceled';
-            const req = await this.friendModel.findOne({
-                userId: requesterId,
-                friendId: userJwt.userId,
-            });
-            console.log('Deleted', req._id);
-            await this.friendModel.findOneAndDelete({
-                userId: requesterId,
-                friendId: userJwt.userId,
-            });
-        }
-        return response;
-    }
-    async getFriendList(userJwt) {
-        const user = await this.userModel.findById(userJwt.userId);
-    }
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(users_schema_1.User.name)),
-    __param(1, (0, mongoose_1.InjectModel)(friends_schema_1.Friend.name)),
-    __param(2, (0, common_1.Inject)((0, common_1.forwardRef)(() => follow_service_1.FollowService))),
+    __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => follow_service_1.FollowService))),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Model,
         follow_service_1.FollowService])
 ], UserService);
 exports.UserService = UserService;

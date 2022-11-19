@@ -10,10 +10,10 @@ export class Follow {
   _id: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
-  userId: string | Types.ObjectId;
+  userId: Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
-  followerId: string | Types.ObjectId;
+  followerId: Types.ObjectId;
 
   @Prop({ default: FOLLOW_STATUS.HOLD })
   status: number;
