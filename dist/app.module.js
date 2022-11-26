@@ -27,6 +27,8 @@ const cloudinary_module_1 = require("./modules/cloudinary/cloudinary.module");
 const cloudinary_service_1 = require("./modules/cloudinary/cloudinary.service");
 const follow_module_1 = require("./modules/follow/follow.module");
 const follow_service_1 = require("./modules/follow/follow.service");
+const notification_module_1 = require("./modules/notification/notification.module");
+const notification_service_1 = require("./modules/notification/notification.service");
 const posts_module_1 = require("./modules/posts/posts.module");
 const users_module_1 = require("./modules/user/users.module");
 const users_service_1 = require("./modules/user/users.service");
@@ -44,6 +46,10 @@ AppModule = __decorate([
                 autoSchemaFile: 'schema.gql',
                 context: ({ req, res }) => ({ req, res }),
                 plugins: [(0, apollo_server_core_1.ApolloServerPluginLandingPageLocalDefault)()],
+                subscriptions: {
+                    'graphql-ws': true,
+                    'subscriptions-transport-ws': true,
+                },
             }),
             jwt_1.JwtModule.register({
                 secret: process.env.JWT_SECRET,
@@ -56,6 +62,7 @@ AppModule = __decorate([
             follow_module_1.FollowModule,
             posts_module_1.PostsModule,
             comment_module_1.CommentModule,
+            notification_module_1.NotificationModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
@@ -67,6 +74,7 @@ AppModule = __decorate([
             cloudinary_service_1.CloudinaryService,
             follow_service_1.FollowService,
             category_service_1.CategoryService,
+            notification_service_1.NotificationService,
         ],
     })
 ], AppModule);

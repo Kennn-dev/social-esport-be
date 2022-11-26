@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResponseDto = exports.InputCreateUserDto = exports.ResponseUserDetailDto = exports.ResponseLoginDto = exports.ResponseUserDto = exports.InputLoginDto = exports.UserDto = void 0;
+exports.ResponseDto = exports.InputCreateUserDto = exports.ResponseUserDetailDto = exports.ResponseLoginDto = exports.SearchResponseUserDto = exports.ResponseUserDto = exports.InputLoginDto = exports.UserDto = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const follow_dto_1 = require("../../follow/dto/follow.dto");
 let UserDto = class UserDto {
@@ -98,6 +98,16 @@ ResponseUserDto = __decorate([
     (0, graphql_1.ObjectType)()
 ], ResponseUserDto);
 exports.ResponseUserDto = ResponseUserDto;
+let SearchResponseUserDto = class SearchResponseUserDto extends ResponseUserDto {
+};
+__decorate([
+    (0, graphql_1.Field)(() => [follow_dto_1.FollowObjDto], { nullable: true }),
+    __metadata("design:type", Array)
+], SearchResponseUserDto.prototype, "follow", void 0);
+SearchResponseUserDto = __decorate([
+    (0, graphql_1.ObjectType)()
+], SearchResponseUserDto);
+exports.SearchResponseUserDto = SearchResponseUserDto;
 let ResponseLoginDto = class ResponseLoginDto {
 };
 __decorate([

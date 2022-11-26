@@ -1,4 +1,4 @@
-import { FollowDto } from 'src/modules/follow/dto/follow.dto';
+import { FollowDto, FollowObjDto } from 'src/modules/follow/dto/follow.dto';
 export declare class UserDto {
     _id: string;
     lastName: string;
@@ -21,6 +21,9 @@ export declare class ResponseUserDto {
     phoneNumber: string;
     avatar: string;
     backgroundImage: string;
+}
+export declare class SearchResponseUserDto extends ResponseUserDto {
+    follow: FollowObjDto[];
 }
 export declare class ResponseLoginDto {
     user: ResponseUserDto;

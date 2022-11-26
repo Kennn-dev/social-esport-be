@@ -15,7 +15,7 @@ export class Follow {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
   followerId: Types.ObjectId;
 
-  @Prop({ default: FOLLOW_STATUS.HOLD })
+  @Prop({ default: FOLLOW_STATUS.INIT })
   status: number;
 }
 

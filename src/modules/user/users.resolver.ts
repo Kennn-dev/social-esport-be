@@ -3,6 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { CurrentUser } from 'src/decorators/auth.decorators';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { SearchResponseUserDto } from 'src/modules/user/dto/user.dto';
 import { JWTPayload } from '../auth/jwt.strategy';
 import { ChangePasswordInputDto } from './dto/change-password-input.dto';
 import { UpdateUserInputDto } from './dto/update-user.dto';
@@ -25,6 +26,15 @@ export class UserResolver {
   @Query(() => [UserDto])
   async getAllUser() {
     return this.userService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query(() => [SearchResponseUserDto], { name: 'searchUser' })
+  async searchUser(
+    @Args('query') query: string,
+    @CurrentUser() user: JWTPayload,
+  ) {
+    return this.userService.searchUser(query, user);
   }
 
   @UseGuards(JwtAuthGuard)

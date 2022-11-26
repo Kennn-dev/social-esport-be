@@ -18,6 +18,8 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { CloudinaryService } from './modules/cloudinary/cloudinary.service';
 import { FollowModule } from './modules/follow/follow.module';
 import { FollowService } from './modules/follow/follow.service';
+import { NotificationModule } from './modules/notification/notification.module';
+import { NotificationService } from './modules/notification/notification.service';
 import { PostsModule } from './modules/posts/posts.module';
 import { UserModule } from './modules/user/users.module';
 import { UserService } from './modules/user/users.service';
@@ -32,6 +34,11 @@ import { UserService } from './modules/user/users.service';
       autoSchemaFile: 'schema.gql',
       context: ({ req, res }) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      // installSubscriptionHandlers: true,
+      subscriptions: {
+        'graphql-ws': true,
+        'subscriptions-transport-ws': true,
+      },
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
@@ -44,6 +51,7 @@ import { UserService } from './modules/user/users.service';
     FollowModule,
     PostsModule,
     CommentModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
@@ -55,6 +63,7 @@ import { UserService } from './modules/user/users.service';
     CloudinaryService,
     FollowService,
     CategoryService,
+    NotificationService,
     // {
     //   provide: APP_GUARD,
     //   useClass: RolesGuard,

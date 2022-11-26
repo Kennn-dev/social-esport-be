@@ -1,4 +1,5 @@
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
+import { SearchResponseUserDto } from 'src/modules/user/dto/user.dto';
 import { JWTPayload } from '../auth/jwt.strategy';
 import { ChangePasswordInputDto } from './dto/change-password-input.dto';
 import { UpdateUserInputDto } from './dto/update-user.dto';
@@ -10,6 +11,7 @@ export declare class UserResolver {
     constructor(userService: UserService);
     hello(): Promise<string>;
     getAllUser(): Promise<User[]>;
+    searchUser(query: string, user: JWTPayload): Promise<SearchResponseUserDto[]>;
     getUser(id: string): Promise<ResponseUserDetailDto>;
     createNewUser(inputCreate: InputCreateUserDto): Promise<StatusResponseDto>;
     updateUser(id: string, inputUpdate: UpdateUserInputDto, user: JWTPayload): Promise<StatusResponseDto>;

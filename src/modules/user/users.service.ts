@@ -10,6 +10,8 @@ import { compareSync, hashSync } from 'bcrypt';
 import { Model } from 'mongoose';
 import { StatusResponseDto } from 'src/common/dto/response-status.dto';
 import { HASH } from 'src/constants/hash';
+import { SearchResponseUserDto } from 'src/modules/user/dto/user.dto';
+import { toObjectId } from 'src/utils';
 import { handleError } from 'src/utils/errors';
 import { JWTPayload } from '../auth/jwt.strategy';
 import { FollowService } from './../follow/follow.service';
@@ -28,6 +30,53 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     return await this.userModel.find().exec();
+  }
+
+  async searchUser(
+    searchStr: string,
+    user: JWTPayload,
+  ): Promise<SearchResponseUserDto[]> {
+    const query = [
+      {
+        $match: {
+          $text: {
+            $search: searchStr,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'follows',
+          let: {
+            id: '$_id',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$userId', toObjectId(user.userId)],
+                    },
+                    {
+                      $eq: ['$followerId', '$$id'],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'follow',
+        },
+      },
+      {
+        $limit: 10,
+      },
+    ];
+
+    const userList = await this.userModel.aggregate(query);
+
+    return userList;
   }
 
   async createUserWithSocialAccount(data: any): Promise<User> {

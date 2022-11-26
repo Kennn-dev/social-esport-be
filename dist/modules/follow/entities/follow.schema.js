@@ -25,7 +25,7 @@ __decorate([
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Follow.prototype, "followerId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: follow_1.FOLLOW_STATUS.HOLD }),
+    (0, mongoose_1.Prop)({ default: follow_1.FOLLOW_STATUS.INIT }),
     __metadata("design:type", Number)
 ], Follow.prototype, "status", void 0);
 Follow = __decorate([

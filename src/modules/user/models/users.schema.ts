@@ -44,6 +44,13 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
+UserSchema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
+  phoneNumber: 'text',
+});
+
 UserSchema.pre<any>('save', function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   let user = this;

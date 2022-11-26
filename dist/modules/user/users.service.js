@@ -18,6 +18,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const bcrypt_1 = require("bcrypt");
 const mongoose_2 = require("mongoose");
 const hash_1 = require("../../constants/hash");
+const utils_1 = require("../../utils");
 const errors_1 = require("../../utils/errors");
 const follow_service_1 = require("./../follow/follow.service");
 const users_schema_1 = require("./models/users.schema");
@@ -28,6 +29,47 @@ let UserService = class UserService {
     }
     async findAll() {
         return await this.userModel.find().exec();
+    }
+    async searchUser(searchStr, user) {
+        const query = [
+            {
+                $match: {
+                    $text: {
+                        $search: searchStr,
+                    },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'follows',
+                    let: {
+                        id: '$_id',
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {
+                                            $eq: ['$userId', (0, utils_1.toObjectId)(user.userId)],
+                                        },
+                                        {
+                                            $eq: ['$followerId', '$$id'],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                    ],
+                    as: 'follow',
+                },
+            },
+            {
+                $limit: 10,
+            },
+        ];
+        const userList = await this.userModel.aggregate(query);
+        return userList;
     }
     async createUserWithSocialAccount(data) {
         try {

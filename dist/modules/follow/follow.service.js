@@ -29,7 +29,9 @@ let FollowService = class FollowService {
     }
     async sendRequest(senderId, followerId) {
         try {
-            console.log({ followerId, senderId });
+            if (senderId === followerId) {
+                throw new Error('You adready follow yourself ! :)');
+            }
             const sender = await this.userService.findOne({
                 _id: (0, utils_1.toObjectId)(senderId),
             });
@@ -38,17 +40,45 @@ let FollowService = class FollowService {
             });
             if (!sender || !follower)
                 throw new Error("User doesn't exits bruhh");
+            const userGotFollowed = await this.followModel.findOne({
+                userId: follower._id,
+                followerId: sender._id,
+            });
             const isRequested = await this.followModel.findOne({
                 followerId: follower._id,
                 userId: sender._id,
             });
-            if (isRequested)
-                throw new Error('You have already submitted this request');
-            const data = {
+            if (isRequested) {
+                if (isRequested.status === follow_1.FOLLOW_STATUS.FOLLOW_BACK) {
+                    isRequested.status = follow_1.FOLLOW_STATUS.FOLLOWED;
+                    userGotFollowed.status = follow_1.FOLLOW_STATUS.FOLLOWED;
+                    await isRequested.save();
+                    await userGotFollowed.save();
+                }
+                return {
+                    message: 'Success',
+                    status: common_1.HttpStatus.OK,
+                };
+            }
+            let data = {
                 followerId: follower._id,
                 userId: sender._id,
-                status: follow_1.FOLLOW_STATUS.HOLD,
+                status: follow_1.FOLLOW_STATUS.FOLLOWING,
             };
+            if (userGotFollowed &&
+                userGotFollowed.status === follow_1.FOLLOW_STATUS.FOLLOWING) {
+                data.status = follow_1.FOLLOW_STATUS.FOLLOWED;
+                userGotFollowed.status = follow_1.FOLLOW_STATUS.FOLLOWED;
+                userGotFollowed.save();
+            }
+            else {
+                const newUserFollowed = new this.followModel({
+                    userId: follower._id,
+                    followerId: sender._id,
+                    status: follow_1.FOLLOW_STATUS.FOLLOW_BACK,
+                });
+                newUserFollowed.save();
+            }
             console.log(data);
             const result = new this.followModel(data);
             await result.save();
@@ -64,17 +94,44 @@ let FollowService = class FollowService {
     }
     async unfollow(senderId, followerId) {
         try {
-            const sender = await this.userService.findOne({ id: senderId });
-            const follower = await this.userService.findOne({ id: followerId });
+            if (senderId === followerId) {
+                throw new Error('You adready follow yourself ! :)');
+            }
+            const sender = await this.userService.findOne({
+                _id: (0, utils_1.toObjectId)(senderId),
+            });
+            const follower = await this.userService.findOne({
+                _id: (0, utils_1.toObjectId)(followerId),
+            });
             if (!sender || !follower) {
                 throw new Error('Invalid request');
             }
-            const isCompleted = await this.followModel.findOneAndDelete({
+            const follow = await this.followModel.findOne({
                 userId: sender._id,
                 followerId: follower._id,
             });
-            if (!isCompleted)
-                throw new Error('Invalid request');
+            const theirFollow = await this.followModel.findOne({
+                followerId: sender._id,
+                userId: follower._id,
+            });
+            console.log(JSON.stringify(follow));
+            console.log(JSON.stringify(theirFollow));
+            if (!follow)
+                throw new Error('Invalid Request');
+            if (follow.status === follow_1.FOLLOW_STATUS.FOLLOWED) {
+                theirFollow.status = follow_1.FOLLOW_STATUS.FOLLOWING;
+                follow.status = follow_1.FOLLOW_STATUS.FOLLOW_BACK;
+                await follow.save();
+                await theirFollow.save();
+            }
+            else if (follow.status === follow_1.FOLLOW_STATUS.FOLLOWING) {
+                follow.deleteOne();
+                theirFollow.deleteOne();
+                return {
+                    message: 'Unfollowed',
+                    status: common_1.HttpStatus.OK,
+                };
+            }
             return {
                 message: 'Unfollowed',
                 status: common_1.HttpStatus.OK,
@@ -84,12 +141,6 @@ let FollowService = class FollowService {
             console.log(error);
             (0, errors_1.handleError)(error);
         }
-    }
-    async findOne(params) {
-        return this.followModel.findOne(params);
-    }
-    async findAll() {
-        return this.followModel.find();
     }
     async getUserFollowData(userId) {
         const aggregateQueryFollower = (0, utils_2.aggregateUser)({
@@ -202,12 +253,6 @@ let FollowService = class FollowService {
         ];
         const result = this.followModel.aggregate(query);
         return result;
-    }
-    update(id) {
-        return `This action updates a #${id} follow`;
-    }
-    remove(id) {
-        return `This action removes a #${id} follow`;
     }
 };
 FollowService = __decorate([

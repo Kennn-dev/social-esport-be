@@ -64,6 +64,12 @@ User = __decorate([
 ], User);
 exports.User = User;
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
+exports.UserSchema.index({
+    firstName: 'text',
+    lastName: 'text',
+    email: 'text',
+    phoneNumber: 'text',
+});
 exports.UserSchema.pre('save', function (next) {
     let user = this;
     if (!user.isModified('password'))

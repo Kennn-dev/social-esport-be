@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID, InputType, Int } from '@nestjs/graphql';
-import { FollowDto } from 'src/modules/follow/dto/follow.dto';
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { FollowDto, FollowObjDto } from 'src/modules/follow/dto/follow.dto';
 
 @ObjectType()
 export class UserDto {
@@ -55,6 +55,12 @@ export class ResponseUserDto {
   avatar: string;
   @Field({ nullable: true })
   backgroundImage: string;
+}
+
+@ObjectType()
+export class SearchResponseUserDto extends ResponseUserDto {
+  @Field(() => [FollowObjDto], { nullable: true })
+  follow: FollowObjDto[];
 }
 
 @ObjectType()
